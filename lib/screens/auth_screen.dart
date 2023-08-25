@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+final firebase = FirebaseAuth.instance;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -14,14 +17,31 @@ class _AuthScreen extends State<AuthScreen> {
 
   var _isLogin = true;
 
-  void _submit() {
+  void _submit() async {
     final isValid = _formKey.currentState!.validate();
+
+    if (!isValid) {
+      return;
+    }
 
     if (isValid) {
       _formKey.currentState!.save();
     }
-    print('Entred email $_entredEmail');
-    print("Entres password $_entredPassword");
+
+    if (_isLogin) {
+      //log user in
+    } else {
+      //create user by Firebase
+      try {
+        final userCredentions = await firebase.createUserWithEmailAndPassword(
+            email: _entredEmail, password: _entredPassword);
+        print(userCredentions);
+      } on FirebaseAuthException catch (error) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error.message ?? 'no message')));
+      }
+    }
   }
 
   @override
