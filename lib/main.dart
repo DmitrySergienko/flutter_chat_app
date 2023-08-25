@@ -1,4 +1,7 @@
 import 'package:chat_app/screens/auth_screen.dart';
+import 'package:chat_app/screens/chart_screen.dart';
+import 'package:chat_app/screens/splash_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -24,7 +27,23 @@ class App extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 143, 155, 167),
         ),
       ),
-      home: const AuthScreen(),
+      //StrimBuilder - возвращает данные как слушатель ожидя по мере их поступления
+      // Future - возвращает только один раз кода данные придут (единажды)
+      home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (ctx, snapshot) {
+            //запускаем splash screen во врямя загрузки данных
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SplashScreen();
+            }
+
+            //если в Firebase есть данные то они вернуться мы их отслеживаем с помощью StreamBuilder
+            if (snapshot.hasData) {
+              return const ChatScreen();
+            } else {
+              return const AuthScreen();
+            }
+          }),
     );
   }
 }
