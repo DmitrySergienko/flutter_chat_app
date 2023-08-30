@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:chat_app/widget/user_image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 final firebase = FirebaseAuth.instance;
@@ -16,12 +19,18 @@ class _AuthScreen extends State<AuthScreen> {
   var _entredEmail = '';
   var _entredPassword = '';
 
+  //keep image
+  File? _selectedImage;
+
+  //spiner
+  var _isUploading = false;
+
   var _isLogin = true;
 
   void _submit() async {
     final isValid = _formKey.currentState!.validate();
 
-    if (!isValid) {
+    if (!isValid || !_isLogin && _selectedImage == null) {
       return;
     }
 
@@ -44,14 +53,32 @@ class _AuthScreen extends State<AuthScreen> {
     } else {
       //create user by Firebase
       try {
+        //start spiner while uploading data
+        setState(() {
+          _isUploading = true;
+        });
+
         final userCredentions = await firebase.createUserWithEmailAndPassword(
             email: _entredEmail, password: _entredPassword);
         print(userCredentions);
+
+        //save image in Firebase storage
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('user_image')
+            .child('${userCredentions.user!.uid}.jpg');
+        await storageRef.putFile(_selectedImage!);
+        final imageUrl = await storageRef.getDownloadURL();
+
+        print(imageUrl);
       } on FirebaseAuthException catch (error) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(error.message ?? 'no message')));
       }
+      setState(() {
+        _isLogin = false;
+      });
     }
   }
 
@@ -81,7 +108,11 @@ class _AuthScreen extends State<AuthScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             //if the user signedUp
-                            if (!_isLogin) UserImagePicker(),
+                            if (!_isLogin)
+                              UserImagePicker(
+                                onPickImage: (pickedImage) =>
+                                    _selectedImage = pickedImage,
+                              ),
                             TextFormField(
                               decoration: const InputDecoration(
                                   labelText: 'Email Address'),
@@ -117,25 +148,28 @@ class _AuthScreen extends State<AuthScreen> {
                             const SizedBox(
                               height: 12,
                             ),
-                            ElevatedButton(
-                              onPressed: _submit,
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .primaryContainer),
-                              child: Text(_isLogin ? 'Login' : 'Signup'),
-                            ),
+                            if (_isUploading) const CircularProgressIndicator(),
+                            if (!_isUploading)
+                              ElevatedButton(
+                                onPressed: _submit,
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer),
+                                child: Text(_isLogin ? 'Login' : 'Signup'),
+                              ),
                             //if _isLogin is true "I have an account" or "create"
-                            TextButton(
-                              onPressed: () {
-                                //переключалка между состояниями, если _islogin is true -> false
-                                setState(() {
-                                  _isLogin = !_isLogin;
-                                });
-                              },
-                              child:
-                                  Text(_isLogin ? 'Create account' : 'Login'),
-                            )
+                            if (!_isUploading) //кнопка будет показана только если загрузка false
+                              TextButton(
+                                onPressed: () {
+                                  //переключалка между состояниями, если _islogin is true -> false
+                                  setState(() {
+                                    _isLogin = !_isLogin;
+                                  });
+                                },
+                                child:
+                                    Text(_isLogin ? 'Create account' : 'Login'),
+                              )
                           ],
                         )),
                   ),
