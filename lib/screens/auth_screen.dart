@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/widget/user_image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class _AuthScreen extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   var _entredEmail = '';
   var _entredPassword = '';
+  var _entredUserName = '';
 
   //keep image
   File? _selectedImage;
@@ -69,6 +71,18 @@ class _AuthScreen extends State<AuthScreen> {
             .child('${userCredentions.user!.uid}.jpg');
         await storageRef.putFile(_selectedImage!);
         final imageUrl = await storageRef.getDownloadURL();
+
+        //save data in Firebase Firestore
+        await FirebaseFirestore.instance
+            .collection('users') //folder name in Firebase
+            .doc(userCredentions.user!.uid) //file name in Firebase
+
+            .set({
+          //set data which we would like store
+          'user_name': _entredUserName,
+          'email': _entredEmail,
+          'image_url': imageUrl
+        });
 
         print(imageUrl);
       } on FirebaseAuthException catch (error) {
@@ -131,6 +145,23 @@ class _AuthScreen extends State<AuthScreen> {
                                 _entredEmail = value!;
                               },
                             ),
+                            if (!_isLogin)
+                              TextFormField(
+                                decoration: const InputDecoration(
+                                    labelText: 'Username'),
+                                enableSuggestions: false,
+                                onSaved: (value) {
+                                  _entredUserName = value!;
+                                },
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value.trim().length < 3) {
+                                    return 'Please eneter an valid name at least more then 3 characters';
+                                  }
+                                  return null;
+                                },
+                              ),
                             TextFormField(
                               decoration:
                                   const InputDecoration(labelText: 'Password'),
