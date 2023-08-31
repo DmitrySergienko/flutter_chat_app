@@ -1,4 +1,6 @@
 import 'package:chat_app/screens/auth_screen.dart';
+import 'package:chat_app/widget/chat_messages.dart';
+import 'package:chat_app/widget/new_message.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -12,7 +14,7 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter chart'),
+        title: const Text('Flutter chat'),
         actions: [
           IconButton(
             onPressed: _logOut,
@@ -21,8 +23,8 @@ class ChatScreen extends StatelessWidget {
           )
         ],
       ),
-      body: const Center(
-        child: Text('Logged In'),
+      body: const Column(
+        children: [Expanded(child: ChatMessages()), NewMessage()],
       ),
     );
   }
