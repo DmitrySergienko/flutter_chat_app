@@ -42,7 +42,6 @@ class ChatMessages extends StatelessWidget {
               itemCount: loadMessages.length,
               itemBuilder: (ctx, index) {
                 final chatMessage = loadMessages[index].data();
-                print('chatMessage all: $chatMessage');
 
                 final nextMessage = index + 1 < loadMessages.length
                     ? loadMessages[index + 1].data()
