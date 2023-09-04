@@ -25,6 +25,9 @@ class _ChatScreenState extends State<ChatScreen> {
     final token = await fcm
         .getToken(); //toke can be send to backend by HTTP, and later use
     print('token: $token');
+
+    //if we would like make a notification chanel
+    fcm.subscribeToTopic('chat');
   }
 
   @override
