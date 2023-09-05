@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 
 final firebase = FirebaseAuth.instance;
 
@@ -23,6 +24,16 @@ class _AuthScreen extends State<AuthScreen> {
 
   //keep image
   File? _selectedImage;
+
+  //compress image
+  File compressImage(File imageFile) {
+    final rawImage = img.decodeImage(imageFile.readAsBytesSync());
+    final compressedImage = img.copyResize(rawImage!,
+        width: 720); // You can adjust the width to your needs
+    imageFile.writeAsBytesSync(img.encodeJpg(compressedImage,
+        quality: 85)); // 85 is a good quality value, you can adjust as needed
+    return imageFile;
+  }
 
   //spiner
   var _isUploading = false;
@@ -120,7 +131,7 @@ class _AuthScreen extends State<AuthScreen> {
                             if (!_isLogin)
                               UserImagePicker(
                                 onPickImage: (pickedImage) =>
-                                    _selectedImage = pickedImage,
+                                    _selectedImage = compressImage(pickedImage),
                               ),
                             TextFormField(
                               decoration: const InputDecoration(
