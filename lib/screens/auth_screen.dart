@@ -45,8 +45,6 @@ class _AuthScreen extends State<AuthScreen> {
       try {
         final userCredentions = await firebase.signInWithEmailAndPassword(
             email: _entredEmail, password: _entredPassword);
-
-        print('logiIn: $userCredentions');
       } on FirebaseAuthException catch (error) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -62,7 +60,6 @@ class _AuthScreen extends State<AuthScreen> {
 
         final userCredentions = await firebase.createUserWithEmailAndPassword(
             email: _entredEmail, password: _entredPassword);
-        print(userCredentions);
 
         //save image in Firebase storage
         final storageRef = FirebaseStorage.instance
@@ -83,8 +80,6 @@ class _AuthScreen extends State<AuthScreen> {
           'email': _entredEmail,
           'image_url': imageUrl
         });
-
-        print(imageUrl);
       } on FirebaseAuthException catch (error) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(

@@ -1,3 +1,4 @@
+import 'package:chat_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 // A MessageBubble for showing a single chat message on the ChatScreen.
@@ -9,6 +10,7 @@ class MessageBubble extends StatelessWidget {
     required this.username,
     required this.message,
     required this.isMe,
+    required this.email,
   }) : isFirstInSequence = true;
 
   // Create a amessage bubble that continues the sequence.
@@ -16,8 +18,11 @@ class MessageBubble extends StatelessWidget {
     super.key,
     required this.message,
     required this.isMe,
+
+    // required this.userEmail,
   })  : isFirstInSequence = false,
         userImage = null,
+        email = null,
         username = null;
 
   // Whether or not this message bubble is the first in a sequence of messages
@@ -31,6 +36,8 @@ class MessageBubble extends StatelessWidget {
   // Not required if the message is not the first in a sequence.
   final String? userImage;
 
+  final String? email;
+
   // Username of the user.
   // Not required if the message is not the first in a sequence.
   final String? username;
@@ -38,6 +45,22 @@ class MessageBubble extends StatelessWidget {
 
   // Controls how the MessageBubble will be aligned.
   final bool isMe;
+
+  void _goToProfile(BuildContext context) {
+    if (userImage != null && username != null && email != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (ctx) => ProfileScreen(
+                userImage: userImage!,
+                userName: username!,
+                userEmail: email!,
+              )));
+    } else {
+      // Handle the case when the values are null, e.g., show a Snackbar.
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Profile details are not available. email: $email, username: $username')));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +73,15 @@ class MessageBubble extends StatelessWidget {
             top: 15,
             // Align user image to the right, if the message is from me.
             right: isMe ? 0 : null,
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                userImage!,
+            child: GestureDetector(
+              onTap: () => _goToProfile(context),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  userImage!,
+                ),
+                backgroundColor: theme.colorScheme.primary.withAlpha(180),
+                radius: 23,
               ),
-              backgroundColor: theme.colorScheme.primary.withAlpha(180),
-              radius: 23,
             ),
           ),
         Container(

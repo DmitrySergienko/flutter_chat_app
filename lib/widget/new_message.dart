@@ -44,6 +44,7 @@ class _NewMessage extends State<NewMessage> {
       'userId': user.uid,
       'userName': userData.data()!['user_name'],
       'userImage': userData.data()!['image_url'],
+      'email': userData.data()!['email'],
     });
   }
 
