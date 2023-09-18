@@ -62,16 +62,24 @@ class _NewMessage extends State<NewMessage> {
         children: [
           Expanded(
             child: TextField(
-              controller: _messageController,
-              textCapitalization: TextCapitalization.sentences,
-              autocorrect: true,
-              enableSuggestions: true,
-              decoration: const InputDecoration(labelText: 'Send a message...'),
-            ),
+                controller: _messageController,
+                textCapitalization: TextCapitalization.sentences,
+                autocorrect: true,
+                enableSuggestions: true,
+                decoration: const InputDecoration(
+                    labelText: 'Send a message...',
+                    labelStyle: TextStyle(color: Colors.white, fontSize: 16)),
+                style: const TextStyle(
+                  // This line and the next two are the changes
+                  color: Colors.white,
+                  fontSize: 16.0,
+                )),
           ),
           IconButton(
             onPressed: _submitMessage,
-            icon: const Icon(Icons.send),
+            icon: const Icon(
+              Icons.send,
+            ),
             color: Theme.of(context).colorScheme.primary,
           )
         ],

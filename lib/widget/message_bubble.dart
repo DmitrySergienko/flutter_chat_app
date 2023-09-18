@@ -110,7 +110,8 @@ class MessageBubble extends StatelessWidget {
                         username!,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          fontSize: 20,
+                          color: Colors.white,
                         ),
                       ),
                     ),

@@ -6,6 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+//add color scheme
+var kColorScheme =
+    ColorScheme.fromSeed(seedColor: const Color.fromARGB(121, 5, 163, 220));
+
+//add Dark color scheme
+var kDarkColorTheme = ColorScheme.fromSeed(
+  brightness: Brightness.dark,
+  seedColor: const Color.fromARGB(255, 5, 90, 125),
+);
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -20,6 +30,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'FlutterChat',
       theme: ThemeData().copyWith(
         useMaterial3: true,

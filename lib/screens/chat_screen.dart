@@ -51,8 +51,17 @@ class _ChatScreenState extends State<ChatScreen> {
           )
         ],
       ),
-      body: const Column(
-        children: [Expanded(child: ChatMessages()), NewMessage()],
+      body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: const AssetImage('assets/images/backchat.jpg'),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.7), // Adjust opacity as needed
+                    BlendMode.dstATop))),
+        child: const Column(
+          children: [Expanded(child: ChatMessages()), NewMessage()],
+        ),
       ),
     );
   }

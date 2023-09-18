@@ -31,7 +31,7 @@ class _AuthScreen extends State<AuthScreen> {
     final compressedImage = img.copyResize(rawImage!,
         width: 720); // You can adjust the width to your needs
     imageFile.writeAsBytesSync(img.encodeJpg(compressedImage,
-        quality: 85)); // 85 is a good quality value, you can adjust as needed
+        quality: 100)); // 85 is a good quality value, you can adjust as needed
     return imageFile;
   }
 
@@ -105,117 +105,120 @@ class _AuthScreen extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(
-                    top: 30, bottom: 20, left: 20, right: 20),
-                width: 200,
-                child: Image.asset('assets/images/chat.png'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        body: Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+            image: AssetImage('assets/images/backautumn.jpg'),
+            fit: BoxFit.fill,
+          )),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Card(
+                    margin: const EdgeInsets.all(20),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                //if the user signedUp
+                                if (!_isLogin)
+                                  UserImagePicker(
+                                    onPickImage: (pickedImage) =>
+                                        _selectedImage =
+                                            compressImage(pickedImage),
+                                  ),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                      labelText: 'Email Address'),
+                                  keyboardType: TextInputType.emailAddress,
+                                  autocorrect: false,
+                                  textCapitalization: TextCapitalization.none,
+                                  validator: (value) {
+                                    if (value == null ||
+                                        value.trim().isEmpty ||
+                                        !value.contains('@')) {
+                                      return "Please enter valid email address";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    _entredEmail = value!;
+                                  },
+                                ),
+                                if (!_isLogin)
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                        labelText: 'Username'),
+                                    enableSuggestions: true,
+                                    onSaved: (value) {
+                                      _entredUserName = value!;
+                                    },
+                                    validator: (value) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          value.trim().length < 3) {
+                                        return 'Please eneter an valid name at least more then 3 characters';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                      labelText: 'Password'),
+                                  obscureText: true,
+                                  validator: (value) {
+                                    if (value == null ||
+                                        value.trim().length < 6) {
+                                      return "Passwor must be at least 6 characters long";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    _entredPassword = value!;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                if (_isUploading)
+                                  const CircularProgressIndicator(),
+                                if (!_isUploading)
+                                  ElevatedButton(
+                                    onPressed: _submit,
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .primaryContainer),
+                                    child: Text(_isLogin ? 'Login' : 'Signup'),
+                                  ),
+                                //if _isLogin is true "I have an account" or "create"
+                                if (!_isUploading) //кнопка будет показана только если загрузка false
+                                  TextButton(
+                                    onPressed: () {
+                                      //переключалка между состояниями, если _islogin is true -> false
+                                      setState(() {
+                                        _isLogin = !_isLogin;
+                                      });
+                                    },
+                                    child: Text(
+                                        _isLogin ? 'Create account' : 'Login'),
+                                  )
+                              ],
+                            )),
+                      ),
+                    ),
+                  )
+                ],
               ),
-              Card(
-                margin: const EdgeInsets.all(20),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            //if the user signedUp
-                            if (!_isLogin)
-                              UserImagePicker(
-                                onPickImage: (pickedImage) =>
-                                    _selectedImage = compressImage(pickedImage),
-                              ),
-                            TextFormField(
-                              decoration: const InputDecoration(
-                                  labelText: 'Email Address'),
-                              keyboardType: TextInputType.emailAddress,
-                              autocorrect: false,
-                              textCapitalization: TextCapitalization.none,
-                              validator: (value) {
-                                if (value == null ||
-                                    value.trim().isEmpty ||
-                                    !value.contains('@')) {
-                                  return "Please enter valid email address";
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                _entredEmail = value!;
-                              },
-                            ),
-                            if (!_isLogin)
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Username'),
-                                enableSuggestions: false,
-                                onSaved: (value) {
-                                  _entredUserName = value!;
-                                },
-                                validator: (value) {
-                                  if (value == null ||
-                                      value.isEmpty ||
-                                      value.trim().length < 3) {
-                                    return 'Please eneter an valid name at least more then 3 characters';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            TextFormField(
-                              decoration:
-                                  const InputDecoration(labelText: 'Password'),
-                              obscureText: true,
-                              validator: (value) {
-                                if (value == null || value.trim().length < 6) {
-                                  return "Passwor must be at least 6 characters long";
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                _entredPassword = value!;
-                              },
-                            ),
-                            const SizedBox(
-                              height: 12,
-                            ),
-                            if (_isUploading) const CircularProgressIndicator(),
-                            if (!_isUploading)
-                              ElevatedButton(
-                                onPressed: _submit,
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer),
-                                child: Text(_isLogin ? 'Login' : 'Signup'),
-                              ),
-                            //if _isLogin is true "I have an account" or "create"
-                            if (!_isUploading) //кнопка будет показана только если загрузка false
-                              TextButton(
-                                onPressed: () {
-                                  //переключалка между состояниями, если _islogin is true -> false
-                                  setState(() {
-                                    _isLogin = !_isLogin;
-                                  });
-                                },
-                                child:
-                                    Text(_isLogin ? 'Create account' : 'Login'),
-                              )
-                          ],
-                        )),
-                  ),
-                ),
-              )
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

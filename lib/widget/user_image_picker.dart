@@ -18,10 +18,10 @@ class _UserImagePicker extends State<UserImagePicker> {
 
   void _imagePick() async {
     //1. make a image
-    final picjedImage = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 50, maxWidth: 150);
+    final picjedImage = await ImagePicker().pickImage(
+        source: ImageSource.camera, imageQuality: 100, maxWidth: 150);
 
-    //2.sava the image in the File if it is not null
+    //2.save the image in the File if it is not null
     if (picjedImage == null) {
       return;
     }
