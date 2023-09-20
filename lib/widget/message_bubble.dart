@@ -4,23 +4,23 @@ import 'package:flutter/material.dart';
 // A MessageBubble for showing a single chat message on the ChatScreen.
 class MessageBubble extends StatelessWidget {
   // Create a message bubble which is meant to be the first in the sequence.
-  const MessageBubble.first({
-    super.key,
-    required this.userImage,
-    required this.username,
-    required this.message,
-    required this.isMe,
-    required this.email,
-  }) : isFirstInSequence = true;
+  const MessageBubble.first(
+      {super.key,
+      required this.userImage,
+      required this.username,
+      required this.message,
+      required this.isMe,
+      required this.email,
+      this.chatImage})
+      : isFirstInSequence = true;
 
   // Create a amessage bubble that continues the sequence.
-  const MessageBubble.next({
-    super.key,
-    required this.message,
-    required this.isMe,
+  const MessageBubble.next(
+      {super.key, required this.message, required this.isMe, this.chatImage
 
-    // required this.userEmail,
-  })  : isFirstInSequence = false,
+      // required this.userEmail,
+      })
+      : isFirstInSequence = false,
         userImage = null,
         email = null,
         username = null;
@@ -42,6 +42,9 @@ class MessageBubble extends StatelessWidget {
   // Not required if the message is not the first in a sequence.
   final String? username;
   final String message;
+
+  //imgage message not requrired
+  final String? chatImage;
 
   // Controls how the MessageBubble will be aligned.
   final bool isMe;
@@ -150,18 +153,29 @@ class MessageBubble extends StatelessWidget {
                       vertical: 4,
                       horizontal: 12,
                     ),
-                    child: Text(
-                      message,
-                      style: TextStyle(
-                        // Add a little line spacing to make the text look nicer
-                        // when multilined.
-                        height: 1.3,
-                        color: isMe
-                            ? Colors.black87
-                            : theme.colorScheme.onSecondary,
-                      ),
-                      softWrap: true,
-                    ),
+                    child: (chatImage != null)
+                        ? Container(
+                            constraints: const BoxConstraints(
+                                maxHeight: 100, maxWidth: 100),
+                            child: Image.network(
+                              chatImage!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error);
+                              },
+                            ))
+                        : Text(
+                            message,
+                            style: TextStyle(
+                              // Add a little line spacing to make the text look nicer
+                              // when multilined.
+                              height: 1.3,
+                              color: isMe
+                                  ? Colors.black87
+                                  : theme.colorScheme.onSecondary,
+                            ),
+                            softWrap: true,
+                          ),
                   ),
                 ],
               ),

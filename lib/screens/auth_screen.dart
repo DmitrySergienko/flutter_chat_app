@@ -131,8 +131,7 @@ class _AuthScreen extends State<AuthScreen> {
                                 if (!_isLogin)
                                   UserImagePicker(
                                     onPickImage: (pickedImage) =>
-                                        _selectedImage =
-                                            compressImage(pickedImage),
+                                        _selectedImage = pickedImage,
                                   ),
                                 TextFormField(
                                   decoration: const InputDecoration(

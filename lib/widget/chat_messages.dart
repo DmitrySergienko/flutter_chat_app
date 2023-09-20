@@ -24,7 +24,10 @@ class ChatMessages extends StatelessWidget {
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(
-              child: Text('No messages found'),
+              child: Text(
+                'No messages found',
+                style: TextStyle(color: Colors.white),
+              ),
             );
           }
           if (snapshot.hasError) {
@@ -42,7 +45,6 @@ class ChatMessages extends StatelessWidget {
               itemCount: loadMessages.length,
               itemBuilder: (ctx, index) {
                 final chatMessage = loadMessages[index].data();
-
                 final nextMessage = index + 1 < loadMessages.length
                     ? loadMessages[index + 1].data()
                     : null;
@@ -52,9 +54,13 @@ class ChatMessages extends StatelessWidget {
                     nextMessage != null ? nextMessage['userId'] : null;
                 final nextUserSame = currentMessageUserId == nextMessageUserId;
 
+                // Check for imageUrl in the chatMessage
+                final hasImageUrl = chatMessage.containsKey('imageUrl');
+
                 if (nextUserSame) {
                   return MessageBubble.next(
                       message: chatMessage['text'],
+                      chatImage: hasImageUrl ? chatMessage['imageUrl'] : null,
                       isMe: authUser.uid == currentMessageUserId);
                 } else {
                   return MessageBubble.first(
@@ -62,6 +68,7 @@ class ChatMessages extends StatelessWidget {
                     username: chatMessage['userName'],
                     message: chatMessage['text'],
                     email: chatMessage['email'],
+                    chatImage: hasImageUrl ? chatMessage['imageUrl'] : null,
                     isMe: authUser.uid == currentMessageUserId,
                   );
                 }

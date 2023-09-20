@@ -27,7 +27,7 @@ class _ChatScreenState extends State<ChatScreen> {
     print('token: $token');
 
     //if we would like make a notification chanel
-    fcm.subscribeToTopic('chat');
+    // fcm.subscribeToTopic('chat');
   }
 
   @override
