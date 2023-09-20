@@ -19,7 +19,7 @@ class _NewMessage extends State<NewMessage> {
   void _createPhoto() async {
     // 1. Make a photo
     final photo = await ImagePicker().pickImage(
-        source: ImageSource.camera, imageQuality: 100, maxWidth: 150);
+        source: ImageSource.camera, imageQuality: 100, maxWidth: 640);
 
     // 2. Save the image in the File if it is not null
     if (photo == null) {

@@ -42,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter chat'),
+        title: const Text('NatsApp'),
         actions: [
           IconButton(
             onPressed: _logOut,
