@@ -1,4 +1,5 @@
 import 'package:chat_app/screens/profile_screen.dart';
+import 'package:chat_app/widget/image_widget.dart';
 import 'package:flutter/material.dart';
 
 // A MessageBubble for showing a single chat message on the ChatScreen.
@@ -62,6 +63,16 @@ class MessageBubble extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
               'Profile details are not available. email: $email, username: $username')));
+    }
+  }
+
+  void _goToImageWidget(BuildContext context) {
+    if (chatImage != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (ctx) => ImageWidget(
+          image: chatImage,
+        ),
+      ));
     }
   }
 
@@ -154,16 +165,19 @@ class MessageBubble extends StatelessWidget {
                       horizontal: 12,
                     ),
                     child: (chatImage != null)
-                        ? Container(
-                            constraints: const BoxConstraints(
-                                maxHeight: 100, maxWidth: 100),
-                            child: Image.network(
-                              chatImage!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(Icons.error);
-                              },
-                            ))
+                        ? InkWell(
+                            onTap: () => _goToImageWidget(context),
+                            child: Container(
+                                constraints: const BoxConstraints(
+                                    maxHeight: 120, maxWidth: 120),
+                                child: Image.network(
+                                  chatImage!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.error);
+                                  },
+                                )),
+                          )
                         : Text(
                             message,
                             style: TextStyle(
