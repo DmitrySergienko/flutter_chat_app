@@ -40,16 +40,13 @@ class _HomeScreenState extends State<HomeScreen>
                     fontSize: 16), // Set the color you want here.
               ),
             ),
-            Text(
-              'People',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+            Icon(Icons.groups, color: Colors.white),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [const ChatScreen(), PeopleScreen()],
+        children: const [ChatScreen(), PeopleScreen()],
       ),
     );
   }
