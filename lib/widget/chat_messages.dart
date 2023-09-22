@@ -26,7 +26,7 @@ class ChatMessages extends StatelessWidget {
             return const Center(
               child: Text(
                 'No messages found',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             );
           }

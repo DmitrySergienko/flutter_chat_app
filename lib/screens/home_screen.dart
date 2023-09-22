@@ -1,3 +1,5 @@
+import 'package:chat_app/screens/people_screen.dart';
+
 import 'chat_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [ChatScreen(), ChatScreen()],
+        children: [const ChatScreen(), PeopleScreen()],
       ),
     );
   }
