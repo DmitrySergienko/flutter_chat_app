@@ -25,16 +25,6 @@ class _AuthScreen extends State<AuthScreen> {
   //keep image
   File? _selectedImage;
 
-  //compress image
-  File compressImage(File imageFile) {
-    final rawImage = img.decodeImage(imageFile.readAsBytesSync());
-    final compressedImage = img.copyResize(rawImage!,
-        width: 720); // You can adjust the width to your needs
-    imageFile.writeAsBytesSync(img.encodeJpg(compressedImage,
-        quality: 100)); // 85 is a good quality value, you can adjust as needed
-    return imageFile;
-  }
-
   //spiner
   var _isUploading = false;
 

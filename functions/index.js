@@ -13,8 +13,10 @@ exports.myFunction = functions.firestore
       // Sending a notification message.
       notification: {
         title: snapshot.data()["userName"],
-        body: snapshot.data()["text"],
+        body: `new: ${snapshot.data()["text"]}`,
         clickAction: "FLUTTER_NOTIFICATION_CLICK",
+        image: snapshot.data()["userImage"], // use 'image' field
       },
     });
   });
+

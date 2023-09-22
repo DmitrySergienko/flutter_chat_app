@@ -1,6 +1,11 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-class ProfileScreen extends StatelessWidget {
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     Key? key,
     required this.userImage,
@@ -11,6 +16,61 @@ class ProfileScreen extends StatelessWidget {
   final String? userImage;
   final String? userName;
   final String? userEmail;
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  String? _userImageUrl;
+
+  void _makeNewAvatarPhoto() async {
+    try {
+      //1. create new photo
+      final photo = await ImagePicker().pickImage(
+          source: ImageSource.camera, imageQuality: 100, maxWidth: 640);
+
+      // 2. save the image in the File if it is not null
+      if (photo == null) {
+        return;
+      }
+
+      File pickedImageFile =
+          File(photo.path); // <-- Assign the photo to the file
+
+      //3. save image in Firebase storage
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        // Handle the situation where the user is not authenticated
+        return;
+      }
+
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('user_image')
+          .child('${user.uid}.jpg');
+      await storageRef.putFile(pickedImageFile);
+      final imageUrl = await storageRef.getDownloadURL();
+
+      user.updatePhotoURL(imageUrl);
+      await user.reload();
+
+      //4. Update the local state to refresh the UI
+      setState(() {
+        _userImageUrl = imageUrl;
+      });
+    } catch (error) {
+      // Handle the error. You might want to show a user-friendly message
+      print('Error updating profile photo: $error');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _userImageUrl = widget.userImage; // Set initial image URL from widget
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +100,24 @@ class ProfileScreen extends StatelessWidget {
                     height: 30,
                   ),
                   CircleAvatar(
-                    backgroundImage: NetworkImage(userImage!),
+                    backgroundImage: NetworkImage(_userImageUrl!),
                     backgroundColor: theme.colorScheme.primary.withAlpha(180),
                     radius: 90,
+                  ),
+                  Tooltip(
+                    message: "Change profile picture",
+                    child: IconButton(
+                        onPressed: _makeNewAvatarPhoto,
+                        icon: const Icon(Icons.photo_camera)),
                   ),
                   const SizedBox(
                     height: 16,
                   ),
                   Text(
-                    userName!,
+                    widget.userName!,
                     style: const TextStyle(fontSize: 22),
                   ),
-                  Text(userEmail!),
+                  Text(widget.userEmail!),
                 ],
               ),
             ),

@@ -23,11 +23,11 @@ class _ChatScreenState extends State<ChatScreen> {
     fcm.getAPNSToken();
 
     final token = await fcm
-        .getToken(); //toke can be send to backend by HTTP, and later use
+        .getToken(); //if we would like to get acces to the individual device, we can use the token
     print('token: $token');
 
     //if we would like make a notification chanel
-    // fcm.subscribeToTopic('chat');
+    fcm.subscribeToTopic('chat');
   }
 
   @override
