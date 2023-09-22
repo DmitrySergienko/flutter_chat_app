@@ -41,16 +41,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('NatsApp'),
-        actions: [
-          IconButton(
-            onPressed: _logOut,
-            icon: const Icon(Icons.exit_to_app),
-            color: Theme.of(context).colorScheme.primary,
-          )
-        ],
-      ),
       body: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
