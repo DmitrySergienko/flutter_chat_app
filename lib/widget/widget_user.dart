@@ -23,16 +23,15 @@ class WidgetUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: InkWell(
+    return InkWell(
         onTap: () => _goToProfile(context),
-        child: CircleAvatar(
-            backgroundImage: NetworkImage(user.avatarUrl), radius: 23),
-      ),
-      title: Text(
-        user.name,
-        style: const TextStyle(fontSize: 16),
-      ),
-    );
+        child: ListTile(
+          leading: CircleAvatar(
+              backgroundImage: NetworkImage(user.avatarUrl), radius: 23),
+          title: Text(
+            user.name,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ));
   }
 }

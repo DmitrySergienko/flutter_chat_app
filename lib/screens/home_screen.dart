@@ -29,6 +29,23 @@ class _HomeScreenState extends State<HomeScreen>
           'NatsApp',
           style: TextStyle(color: Colors.white),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: InkWell(
+                onTap: () {
+                  const snackBar = SnackBar(
+                    content: Text(
+                      'NatsApp ver 1.0.1 upd 22.09.23',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    backgroundColor: Colors.white,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                },
+                child: const Icon(Icons.more_vert, color: Colors.white)),
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
