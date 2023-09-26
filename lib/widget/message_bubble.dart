@@ -1,5 +1,5 @@
 import 'package:chat_app/screens/profile_screen.dart';
-import 'package:chat_app/widget/image_widget.dart';
+import 'package:chat_app/widget/zoom_image_widget.dart';
 import 'package:flutter/material.dart';
 
 // A MessageBubble for showing a single chat message on the ChatScreen.
@@ -69,7 +69,7 @@ class MessageBubble extends StatelessWidget {
   void _goToImageWidget(BuildContext context) {
     if (chatImage != null) {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (ctx) => ImageWidget(
+        builder: (ctx) => ZoomableImageWidget(
           image: chatImage,
         ),
       ));
@@ -169,7 +169,7 @@ class MessageBubble extends StatelessWidget {
                             onTap: () => _goToImageWidget(context),
                             child: Container(
                                 constraints: const BoxConstraints(
-                                    maxHeight: 120, maxWidth: 120),
+                                    maxHeight: 200, maxWidth: 200),
                                 child: Image.network(
                                   chatImage!,
                                   fit: BoxFit.cover,

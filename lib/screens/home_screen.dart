@@ -4,11 +4,11 @@ import 'package:url_launcher/url_launcher.dart';
 import 'chat_screen.dart';
 import 'package:flutter/material.dart';
 
-final String myUrl =
+const String myUrl =
     'https://drive.google.com/file/d/1W0Qxnwk-wfgtJLaj5l1qxE3TVr6w_8xP/view?usp=drive_link';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _HomeScreenState();
@@ -47,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen>
                     _showErrorDialog(context, 'Failed to save URL: $e');
                   }
                 },
-                child: const Icon(Icons.more_vert, color: Colors.white)),
+                child:
+                    const Icon(Icons.system_update_alt, color: Colors.white)),
           ),
         ],
         bottom: TabBar(
@@ -56,9 +57,7 @@ class _HomeScreenState extends State<HomeScreen>
             Tab(
               child: Text(
                 'Chat',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16), // Set the color you want here.
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
             Icon(Icons.groups, color: Colors.white),
