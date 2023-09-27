@@ -7,11 +7,11 @@ class WidgetUser extends StatelessWidget {
   const WidgetUser({
     super.key,
     required this.user,
-    //required this.currentUserId,
+    required this.currentUserId,
   });
 
   final UserModel user;
-  // final String currentUserId;
+  final String currentUserId;
 
   _goToProfile(BuildContext context) {
     Navigator.of(context).push(
@@ -24,29 +24,30 @@ class WidgetUser extends StatelessWidget {
     );
   }
 
-  // String getChatId(String userId1, String userId2) {
-  //   return [userId1, userId2]..sort().join("-");
-  // }
+  String getChatId(String userId1, String userId2) {
+    return ([userId1, userId2]..sort()).join("-");
+  }
 
-  // _goToChat(BuildContext context, String recipientUserId) {
-  //   final String chatId = getChatId(currentUserId, recipientUserId);
-  //   Navigator.of(context).push(
-  //     MaterialPageRoute(
-  //       builder: (ctx) => IndividualChatScreen(chatId: chatId),
-  //     ),
-  //   );
+  _goToChat(BuildContext context, String recipientUserId) {
+    final String chatId = getChatId(currentUserId, recipientUserId);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => IndividualChatScreen(chatId: chatId),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        // onTap: () => _goToChat(context, user.id),
+        onTap: () => _goToChat(context, user.id),
         child: ListTile(
-      leading: CircleAvatar(
-          backgroundImage: NetworkImage(user.avatarUrl), radius: 23),
-      title: Text(
-        user.name,
-        style: const TextStyle(fontSize: 16),
-      ),
-    ));
+          leading: CircleAvatar(
+              backgroundImage: NetworkImage(user.avatarUrl), radius: 23),
+          title: Text(
+            user.name,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ));
   }
 }
