@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 class PeopleScreen extends StatefulWidget {
   const PeopleScreen({
     super.key,
+    // required this.userID,
   });
+
+  // final String userID;
 
   @override
   _PeopleScreenState createState() => _PeopleScreenState();
@@ -35,12 +38,13 @@ class _PeopleScreenState extends State<PeopleScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(top: 10.0),
+        padding: const EdgeInsets.only(top: 10.0),
         child: ListView.builder(
           itemCount: users.length,
           itemBuilder: (context, index) {
             return WidgetUser(
               user: users[index],
+              //currentUserId: widget.userID,
             );
           },
         ));

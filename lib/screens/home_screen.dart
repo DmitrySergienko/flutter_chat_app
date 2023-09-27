@@ -1,3 +1,4 @@
+import 'package:chat_app/screens/auth_screen.dart';
 import 'package:chat_app/screens/people_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -37,18 +38,33 @@ class _HomeScreenState extends State<HomeScreen>
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: InkWell(
-                onTap: () async {
-                  try {
-                    //launch url
-                    _launchURL(myUrl);
-                  } catch (e) {
-                    _showErrorDialog(context, 'Failed to save URL: $e');
-                  }
-                },
-                child:
-                    const Icon(Icons.system_update_alt, color: Colors.white)),
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Row(
+              children: [
+                InkWell(
+                    onTap: () async {
+                      try {
+                        //launch url
+                        _launchURL(myUrl);
+                      } catch (e) {
+                        _showErrorDialog(context, 'Failed to save URL: $e');
+                      }
+                    },
+                    child: const Icon(Icons.system_update_alt,
+                        color: Colors.white)),
+                const SizedBox(width: 8),
+                InkWell(
+                    onTap: () async {
+                      try {
+                        //launch url
+                        _logOut();
+                      } catch (e) {
+                        _showErrorDialog(context, 'Error: $e');
+                      }
+                    },
+                    child: const Icon(Icons.logout, color: Colors.white)),
+              ],
+            ),
           ),
         ],
         bottom: TabBar(
@@ -66,7 +82,12 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [ChatScreen(), PeopleScreen()],
+        children: const [
+          ChatScreen(),
+          PeopleScreen(
+              //userID: ,
+              )
+        ],
       ),
     );
   }
@@ -83,6 +104,13 @@ class _HomeScreenState extends State<HomeScreen>
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $myUrl');
     }
+  }
+
+  _logOut() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AuthScreen()),
+    );
   }
 
   void _showErrorDialog(BuildContext context, String message) {

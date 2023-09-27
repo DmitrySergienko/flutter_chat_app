@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat_app/screens/home_screen.dart';
 import 'package:chat_app/widget/user_image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,6 +46,10 @@ class _AuthScreen extends State<AuthScreen> {
       try {
         final userCredentions = await firebase.signInWithEmailAndPassword(
             email: _entredEmail, password: _entredPassword);
+
+// navigate to HomeScreen after a successful login
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (ctx) => const HomeScreen()));
       } on FirebaseAuthException catch (error) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -76,11 +81,22 @@ class _AuthScreen extends State<AuthScreen> {
 
             .set({
           //set data which we would like store
+          'id': userCredentions.user!.uid,
           'user_name': _entredUserName,
           'email': _entredEmail,
-          'image_url': imageUrl
+          'image_url': imageUrl,
+        });
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+
+        setState(() {
+          _isUploading =
+              false; // Stop the spinner after the operation is complete
         });
       } on FirebaseAuthException catch (error) {
+        setState(() {
+          _isUploading = false; // Stop the spinner in case of error
+        });
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(error.message ?? 'no message')));

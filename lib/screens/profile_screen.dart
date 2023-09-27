@@ -24,7 +24,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String? _userImageUrl;
 
-  void _makeNewAvatarPhoto() async {
+  Future<void> _makeNewAvatarPhoto() async {
     try {
       //1. create new photo
       final photo = await ImagePicker().pickImage(
@@ -72,6 +72,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _userImageUrl = widget.userImage; // Set initial image URL from widget
   }
 
+  void _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Please be aware'),
+          content: const Text(
+              'The avatar image has been updated successfully. To see the new image, please close and reopen the app.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -107,7 +128,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Tooltip(
                     message: "Change profile picture",
                     child: IconButton(
-                        onPressed: _makeNewAvatarPhoto,
+                        onPressed: () async {
+                          //1.make new avatar
+                          await _makeNewAvatarPhoto();
+                          //2.show Alert diaslog
+                          _showDialog(context);
+                          //3. update state
+                          initState();
+                        },
                         icon: const Icon(Icons.photo_camera)),
                   ),
                   const SizedBox(
