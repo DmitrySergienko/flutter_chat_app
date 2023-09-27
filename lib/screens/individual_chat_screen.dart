@@ -24,16 +24,15 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: InkWell(
-              onTap: () {
-                _logOut();
-              },
-              child: const Icon(Icons.logout, color: Colors.white)),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-      ]),
+      ),
       body: Container(
         decoration: BoxDecoration(
             image: DecorationImage(

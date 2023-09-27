@@ -70,24 +70,19 @@ class _HomeScreenState extends State<HomeScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
+            Icon(Icons.groups, color: Colors.white),
             Tab(
               child: Text(
-                'Chat',
+                'Общий Чат',
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
-            Icon(Icons.groups, color: Colors.white),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          ChatScreen(),
-          PeopleScreen(
-              //userID: ,
-              )
-        ],
+        children: const [PeopleScreen(), ChatScreen()],
       ),
     );
   }
