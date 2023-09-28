@@ -1,7 +1,9 @@
 import 'package:chat_app/screens/auth_screen.dart';
 import 'package:chat_app/screens/people_screen.dart';
+import 'package:chat_app/screens/profile_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'chat_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -21,76 +23,57 @@ class _HomeScreenState extends State<HomeScreen>
 
   late TabController? _tabController;
 
+  final currentUser = FirebaseAuth.instance.currentUser!;
+
+  String? userName;
+  String? userEmail;
+  String? userImage;
+
   @override
   void initState() {
     super.initState();
+    _getUserData();
+
     _tabController = TabController(length: 2, vsync: this);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text(
-          'NatsApp',
-          style: TextStyle(color: Colors.white),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Row(
-              children: [
-                InkWell(
-                    onTap: () async {
-                      try {
-                        //launch url
-                        _launchURL(myUrl);
-                      } catch (e) {
-                        _showErrorDialog(context, 'Failed to save URL: $e');
-                      }
-                    },
-                    child: const Icon(Icons.system_update_alt,
-                        color: Colors.white)),
-                const SizedBox(width: 8),
-                InkWell(
-                    onTap: () async {
-                      try {
-                        //launch url
-                        _logOut();
-                      } catch (e) {
-                        _showErrorDialog(context, 'Error: $e');
-                      }
-                    },
-                    child: const Icon(Icons.logout, color: Colors.white)),
-              ],
-            ),
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Icon(Icons.groups, color: Colors.white),
-            Tab(
-              child: Text(
-                'Общий Чат',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [PeopleScreen(), ChatScreen()],
-      ),
-    );
+  final _firestore = FirebaseFirestore.instance;
+
+  Future<Map<String, dynamic>> fetchUserData(String userId) async {
+    DocumentSnapshot doc =
+        await _firestore.collection('users').doc(userId).get();
+
+    if (!doc.exists) {
+      throw Exception('User not found in Firestore!');
+    }
+
+    return doc.data() as Map<String, dynamic>;
   }
 
-  @override
-  void dispose() {
-    _tabController?.dispose();
-    super.dispose();
+  void _getUserData() async {
+    try {
+      Map<String, dynamic> data = await fetchUserData(currentUser.uid);
+
+      setState(() {
+        userName = data['user_name'];
+        userEmail = data['email'];
+        userImage = data['image_url'];
+      });
+    } catch (e) {
+      print('Failed to fetch user data: $e');
+    }
+  }
+
+  void _navigateToProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ProfileScreen(
+                userEmail: userEmail ?? "unknown",
+                userName: userName ?? "unknown",
+                userImage: userImage ?? '',
+              )),
+    );
   }
 
   _launchURL(String myUrl) async {
@@ -126,5 +109,104 @@ class _HomeScreenState extends State<HomeScreen>
         );
       },
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: const Text(
+          'NatsApp',
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: <Widget>[
+          PopupMenuButton<int>(
+              color: Colors.white,
+              itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 1,
+                      child: Row(
+                        children: [
+                          Icon(Icons.person),
+                          SizedBox(width: 8.0),
+                          Text('Profile'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 2,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 8.0),
+                          Text('Update app'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 3,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 8.0),
+                          Text('Log Out'),
+                        ],
+                      ),
+                    ),
+                  ],
+              onSelected: (value) async {
+                switch (value) {
+                  case 1:
+                    try {
+                      _navigateToProfile();
+                    } catch (e) {
+                      _showErrorDialog(context, 'Failed to save URL: $e');
+                    }
+                    break;
+                  case 2:
+                    {
+                      try {
+                        _launchURL(myUrl);
+                      } catch (e) {
+                        _showErrorDialog(context, 'Error: $e');
+                      }
+                    }
+                    break;
+                  case 3:
+                    {
+                      try {
+                        // logout
+                        _logOut();
+                      } catch (e) {
+                        _showErrorDialog(context, 'Error: $e');
+                      }
+                    }
+                }
+              })
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Icon(Icons.groups, color: Colors.white),
+            Tab(
+              child: Text(
+                'Main Chat',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [PeopleScreen(), ChatScreen()],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
   }
 }

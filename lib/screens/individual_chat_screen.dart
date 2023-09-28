@@ -25,14 +25,8 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          iconTheme: IconThemeData(color: Colors.white)),
       body: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
