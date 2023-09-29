@@ -44,6 +44,10 @@ dependencies:
   image: ^4.0.17
   flutter_launcher_icons: ^0.13.1
   url_launcher: ^6.1.14
+  dio: ^5.3.3
+  permission_handler: ^11.0.0
+  path_provider: ^2.1.1
+  image_gallery_saver: ^2.0.3
 
 dev_dependencies:
   flutter_test:

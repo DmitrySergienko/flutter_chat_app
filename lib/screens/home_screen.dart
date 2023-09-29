@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen>
             Icon(Icons.groups, color: Colors.white),
             Tab(
               child: Text(
-                'Main Chat',
+                'Common Chat',
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
