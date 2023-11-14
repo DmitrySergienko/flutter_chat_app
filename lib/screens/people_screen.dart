@@ -37,29 +37,40 @@ class _PeopleScreenState extends State<PeopleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('users').snapshots(),
-        builder: (ctx, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: const AssetImage('assets/images/people.png'),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.1), // Adjust opacity as needed
+                    BlendMode.dstATop))),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('users').snapshots(),
+            builder: (ctx, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              }
 
-          final users = snapshot.data!.docs
-              .map((doc) => UserModel.fromDocument(doc))
-              .toList();
+              final users = snapshot.data!.docs
+                  .map((doc) => UserModel.fromDocument(doc))
+                  .toList();
 
-          return ListView.builder(
-            itemCount: users.length,
-            itemBuilder: (context, index) {
-              return WidgetUser(
-                user: users[index],
-                currentUserId: currentUserUid,
+              return ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  return WidgetUser(
+                    user: users[index],
+                    currentUserId: currentUserUid,
+                  );
+                },
               );
             },
-          );
-        },
+          ),
+        ),
       ),
     );
   }

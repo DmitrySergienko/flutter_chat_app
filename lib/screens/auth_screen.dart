@@ -85,6 +85,7 @@ class _AuthScreen extends State<AuthScreen> {
           'user_name': _entredUserName,
           'email': _entredEmail,
           'image_url': imageUrl,
+          'token': 'no token',
         });
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (ctx) => const HomeScreen()));
@@ -97,7 +98,9 @@ class _AuthScreen extends State<AuthScreen> {
         setState(() {
           _isUploading = false; // Stop the spinner in case of error
         });
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).clearSnackBars();
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(error.message ?? 'no message')));
       }

@@ -50,7 +50,7 @@ class App extends StatelessWidget {
 
             //если в Firebase есть данные то они вернуться мы их отслеживаем с помощью StreamBuilder
             if (snapshot.hasData) {
-              return HomeScreen();
+              return const HomeScreen();
             } else {
               return const AuthScreen();
             }

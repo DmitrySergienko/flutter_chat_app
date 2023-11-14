@@ -32,7 +32,13 @@ class WidgetUser extends StatelessWidget {
     final String chatId = getChatId(currentUserId, recipientUserId);
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (ctx) => IndividualChatScreen(chatId: chatId),
+        builder: (ctx) => IndividualChatScreen(
+          chatId: chatId,
+          userId: user.id,
+          userImage: user.avatarUrl,
+          userName: user.name,
+          userEmail: user.email,
+        ),
       ),
     );
   }

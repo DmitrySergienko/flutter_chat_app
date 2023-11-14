@@ -5,12 +5,14 @@ class UserModel {
   final String name;
   final String avatarUrl;
   final String email;
+  final String token;
 
   UserModel({
     required this.id,
     required this.name,
     required this.avatarUrl,
     required this.email,
+    required this.token,
   });
 
   factory UserModel.fromDocument(DocumentSnapshot doc) {
@@ -18,6 +20,7 @@ class UserModel {
         id: doc.id,
         name: doc['user_name'],
         avatarUrl: doc['image_url'],
-        email: doc['email']);
+        email: doc['email'],
+        token: doc['token']);
   }
 }

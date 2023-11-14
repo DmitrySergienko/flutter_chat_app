@@ -44,10 +44,10 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: const AssetImage('assets/images/backchat.jpg'),
+                image: const AssetImage('assets/images/backautumn.jpg'),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.7), // Adjust opacity as needed
+                    Colors.black.withOpacity(0.6), // Adjust opacity as needed
                     BlendMode.dstATop))),
         child: const Column(
           children: [Expanded(child: ChatMessages()), NewMessage()],

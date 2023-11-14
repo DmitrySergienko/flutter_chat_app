@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen>
         automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text(
-          'NatsApp',
+          'techcarrot',
           style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[

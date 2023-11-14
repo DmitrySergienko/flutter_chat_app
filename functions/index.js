@@ -13,10 +13,45 @@ exports.myFunction = functions.firestore
       // Sending a notification message.
       notification: {
         title: snapshot.data()["userName"],
-        body: `new: ${snapshot.data()["text"]}`,
+        body: `snapshot.data()["text"]`,
         clickAction: "FLUTTER_NOTIFICATION_CLICK",
         image: snapshot.data()["userImage"], // use 'image' field
       },
     });
   });
+
+  const firestore = admin.firestore();
+
+exports.individualChatNotification = functions.firestore
+  .document("individualChat/{messageId}")
+  .onCreate(async (snapshot, context) => {
+    // Get the recipient user's ID from the created chat message
+    const recipientUserId = snapshot.data().recipientId;
+
+    // Fetch the recipient user's FCM token from Firestore
+    const userDoc = await firestore.collection('users').doc(recipientUserId).get();
+
+    if (!userDoc.exists) {
+      console.log('No user found with ID:', recipientUserId);
+      return;
+    }
+
+    const token = userDoc.data().token;
+    if (!token) {
+      console.log('No token found for user:', recipientUserId);
+      return;
+    }
+
+    // Send the push notification to the recipient user
+    return admin.messaging().send({
+      token: token,
+      notification: {
+        title: snapshot.data()["userName"],
+        body: snapshot.data()["text"],
+        clickAction: "FLUTTER_NOTIFICATION_CLICK",
+        image: snapshot.data()["userImage"],
+      },
+    });
+  });
+
 
